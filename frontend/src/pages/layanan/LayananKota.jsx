@@ -553,19 +553,24 @@ export default function LayananKota() {
       )}
 
       {active === 'voting' && (
-        <section className="svc-grid">
+        <section className="svc-grid svc-vote-grid">
           {data.policies.map(policy => {
             const stats = policyStats(policy);
             return (
-              <article className="svc-panel" key={policy.id}>
-                <div className="svc-panel-head"><h2>{policy.judul}</h2><span>{policy.kategori}</span></div>
-                <p>{policy.deskripsi}</p>
-                <div className="svc-vote-actions">
-                  <button onClick={() => vote(policy.id, 'setuju')}>Setuju</button>
-                  <button onClick={() => vote(policy.id, 'tidak_setuju')}>Tidak Setuju</button>
+              <article className="svc-panel svc-vote-card" key={policy.id}>
+                <div className="svc-vote-card-head">
+                  <span className="svc-vote-category">{policy.kategori}</span>
+                  <h2>{policy.judul}</h2>
                 </div>
-                <div className="svc-result"><span style={{ width: `${stats.setujuPct}%` }} /></div>
-                <p className="svc-small">{stats.setujuPct}% setuju · {stats.tidakPct}% tidak setuju · {stats.total} vote</p>
+                <p className="svc-vote-description">{policy.deskripsi}</p>
+                <div className="svc-vote-footer">
+                  <div className="svc-vote-actions">
+                    <button onClick={() => vote(policy.id, 'setuju')}>Setuju</button>
+                    <button onClick={() => vote(policy.id, 'tidak_setuju')}>Tidak Setuju</button>
+                  </div>
+                  <div className="svc-result"><span style={{ width: `${stats.setujuPct}%` }} /></div>
+                  <p className="svc-small">{stats.setujuPct}% setuju · {stats.tidakPct}% tidak setuju · {stats.total} vote</p>
+                </div>
               </article>
             );
           })}

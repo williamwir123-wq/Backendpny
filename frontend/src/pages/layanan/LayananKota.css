@@ -296,8 +296,9 @@
 
 .svc-vote-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  margin: 18px 0 12px;
+  margin-bottom: 12px;
 }
 
 .svc-result {
@@ -311,6 +312,62 @@
   display: block;
   height: 100%;
   background: #E3B473;
+}
+
+.svc-vote-grid {
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  align-items: stretch;
+}
+
+.svc-vote-card {
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.svc-vote-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.svc-vote-card-head h2 {
+  color: #111E43;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.svc-vote-category {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border-radius: var(--radius-pill);
+  background: #EEF4FF;
+  color: #043CB1;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.svc-vote-description {
+  color: #5F687C;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.svc-vote-footer {
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.svc-vote-footer .svc-small {
+  margin-top: 7px;
+  line-height: 1.45;
 }
 
 .svc-thread-list {
