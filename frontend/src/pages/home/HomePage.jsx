@@ -9,22 +9,30 @@ const services = [
   {
     icon: 'government',
     title: 'Smart Governance',
-    text: 'Layanan publik, laporan warga, dan panel admin untuk tata kelola kota yang responsif.',
+    text: 'Layanan publik, bursa kerja, laporan warga, dan panel admin untuk tata kelola kota.',
+    link: '/layanan',
+    btnText: 'Jelajahi Layanan →',
   },
   {
     icon: 'truck',
     title: 'Smart Mobility',
     text: 'Pantau lalu lintas, transportasi, dan peta kota agar mobilitas warga lebih terarah.',
+    link: '/monitoring',
+    btnText: 'Pantau Mobilitas →',
   },
   {
     icon: 'health',
     title: 'Smart Living',
-    text: 'Akses fasilitas publik, zona aman, layanan kesehatan, pendidikan, dan informasi warga.',
+    text: 'Akses ketersediaan tempat tidur RS, fasilitas publik, dan informasi kesehatan warga.',
+    link: '/monitoring',
+    btnText: 'Cek Fasilitas →',
   },
   {
     icon: 'sparkles',
     title: 'Smart Environment',
-    text: 'Monitoring udara, air bersih, energi, dan sampah untuk lingkungan kota yang berkelanjutan.',
+    text: 'Monitoring kualitas udara (AQI), air bersih, dan energi untuk lingkungan kota.',
+    link: '/monitoring',
+    btnText: 'Pantau Lingkungan →',
   },
 ];
 
@@ -206,6 +214,7 @@ export default function HomePage() {
                   <span className="service-icon"><HeroIcon name={service.icon} /></span>
                   <h3>{service.title}</h3>
                   <p>{service.text}</p>
+                  <Link to={service.link} className="service-card-link">{service.btnText}</Link>
                 </article>
               ))}
             </div>

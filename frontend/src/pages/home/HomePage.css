@@ -439,6 +439,8 @@
 }
 
 .service-card {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   background: #ffffff;
   border: 1px solid #e5ebf7;
@@ -478,6 +480,23 @@
   color: #5f687c;
   font-size: 14px;
   line-height: 1.65;
+  margin-bottom: 18px;
+  flex-grow: 1;
+}
+
+.service-card-link {
+  display: inline-flex;
+  align-items: center;
+  color: #043cb1;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.service-card-link:hover {
+  color: #111e43;
+  transform: translateX(3px);
 }
 
 .hot-news-section {
