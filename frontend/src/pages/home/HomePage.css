@@ -716,6 +716,11 @@
     top: 10px;
   }
 
+  .home-hero {
+    padding-top: 140px;
+    padding-bottom: 70px;
+  }
+
   .home-nav-inner,
   .demo-card {
     align-items: flex-start;
@@ -801,21 +806,65 @@
   .about-grid,
   .footer-grid {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
 
   .hero-visual {
-    min-height: 360px;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--home-radius-panel);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+    margin-top: 16px;
+  }
+
+  .orbit-ring {
+    display: none;
+  }
+
+  .orbit-card {
+    position: static;
+    transform: none !important;
+  }
+
+  .orbit-card-main {
+    width: 80px;
+    height: 80px;
+    font-size: 24px;
+  }
+
+  .city-icon {
+    font-size: 36px;
+  }
+
+  .orbit-card-blue,
+  .orbit-card-gold,
+  .orbit-card-navy {
+    display: none;
+  }
+
+  .hero-panel {
+    position: static;
+    width: 100%;
+    margin-top: 0;
+    text-align: center;
   }
 
   .hero-copy h1 {
-    font-size: 52px;
+    font-size: 38px;
+    line-height: 1.16;
   }
 
   .section-heading h2,
   .feature-band h2,
   .demo-card h2,
   .about-grid h2 {
-    font-size: 34px;
+    font-size: 32px;
   }
 
   .footer-bottom {
@@ -852,7 +901,8 @@
   }
 
   .home-hero {
-    padding-top: 132px;
+    padding-top: 146px;
+    padding-bottom: 54px;
   }
 
   .home-nav .home-container {
@@ -880,36 +930,21 @@
     grid-template-columns: 1fr;
   }
 
-  .hero-visual {
-    min-height: 320px;
-  }
-
   .hero-copy h1 {
-    font-size: 42px;
+    font-size: 32px;
+    line-height: 1.18;
   }
 
   .hero-copy p,
   .feature-band p,
   .demo-card p {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .section-heading h2,
   .feature-band h2,
   .demo-card h2,
   .about-grid h2 {
-    font-size: 30px;
-  }
-
-  .orbit-card-main {
-    right: 54px;
-  }
-
-  .orbit-card-blue {
-    left: 8px;
-  }
-
-  .orbit-ring {
-    right: 8px;
+    font-size: 28px;
   }
 }
