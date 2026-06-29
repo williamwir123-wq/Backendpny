@@ -51,6 +51,7 @@ const tabs = [
   ['edu', 'Pendidikan'],
   ['jobs', 'Lowongan'],
   ['umkm', 'UMKM'],
+  ['voucher', 'Voucher & Poin'],
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -499,6 +500,42 @@ export default function LayananPublik() {
             </ResponsiveContainer>
           </div>
           <div className="pub-panel"><MapBox points={data.umkm} type="umkm" /></div>
+        </section>
+      )}
+
+      {active === 'voucher' && (
+        <section className="pub-panel wide">
+          <div className="pub-head">
+            <div>
+              <h2>🎁 Dompet Voucher & Poin Warga Medan</h2>
+              <span>Tukarkan poin keaktifan warga dengan voucher diskon UMKM & layanan publik kota</span>
+            </div>
+            <span className="pub-badge gold">💰 450 Poin Warga</span>
+          </div>
+
+          <div className="pub-grid">
+            {(data.vouchers || []).map((v) => (
+              <div key={v.id} className="pub-card">
+                <div className="pub-card-head">
+                  <span className="pub-tag gold">{v.kategori}</span>
+                  <span className="pub-badge">{v.potongan}</span>
+                </div>
+                <h3>{v.nama}</h3>
+                <p>{v.deskripsi}</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14, paddingTop: 12, borderTop: '1px solid #edf0f7' }}>
+                  <span style={{ fontSize: 12, color: '#7b8190', fontWeight: 700 }}>Poin: <strong style={{ color: '#043cb1' }}>{v.poin_biaya} Poin</strong></span>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    style={{ padding: '6px 14px', fontSize: 12, borderRadius: 20 }}
+                    onClick={() => toast.success(`Voucher ${v.kode} berhasil diklaim!`)}
+                  >
+                    Klaim Voucher
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
       )}
     </Layout>

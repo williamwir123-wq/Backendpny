@@ -80,6 +80,17 @@ const UmkmBusiness = sequelize.define('UmkmBusiness', {
   lng: { type: DataTypes.FLOAT, allowNull: false },
 }, { tableName: 'umkm_businesses', timestamps: true });
 
+const CityVoucher = sequelize.define('CityVoucher', {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  kode: { type: DataTypes.STRING(80), allowNull: false, unique: true },
+  nama: { type: DataTypes.STRING(180), allowNull: false },
+  kategori: { type: DataTypes.STRING(100), allowNull: false },
+  poin_biaya: { type: DataTypes.INTEGER, defaultValue: 100 },
+  potongan: { type: DataTypes.STRING(80), allowNull: false },
+  deskripsi: { type: DataTypes.TEXT },
+  berlaku_hingga: { type: DataTypes.STRING(40) },
+}, { tableName: 'city_vouchers', timestamps: true });
+
 module.exports = {
   HospitalCapacity,
   CctvPoint,
@@ -88,4 +99,5 @@ module.exports = {
   EducationInstitution,
   LocalJob,
   UmkmBusiness,
+  CityVoucher,
 };

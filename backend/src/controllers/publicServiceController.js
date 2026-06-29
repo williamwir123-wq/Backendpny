@@ -6,6 +6,7 @@ const {
   EducationInstitution,
   LocalJob,
   UmkmBusiness,
+  CityVoucher,
 } = require('../models/PublicService');
 
 const ok = (res, data) => res.json({ success: true, data });
@@ -71,6 +72,12 @@ const seed = async () => {
     { nama: 'Keripik Amplas', kategori: 'Makanan Ringan', pemilik: 'Nur', omzet_bulanan: 42000000, tenaga_kerja: 7, alamat: 'Medan Amplas', lat: 3.5520, lng: 98.6941 },
     { nama: 'Craft Sunggal', kategori: 'Kerajinan', pemilik: 'Dimas', omzet_bulanan: 38000000, tenaga_kerja: 6, alamat: 'Medan Sunggal', lat: 3.5980, lng: 98.6278 },
   ]);
+
+  await CityVoucher.bulkCreate([
+    { kode: 'MEDAN-EBATIK-20', nama: 'Diskon 20% E-Batik Deli Medan', kategori: 'UMKM', poin_biaya: 150, potongan: '20%', deskripsi: 'Subsidi Pemko Medan untuk pembelian produk kerajinan batik lokal Medan.', berlaku_hingga: '31 Des 2026' },
+    { kode: 'MEDAN-TRANS-FREE', nama: 'Gratis Tiket Trans Medan 1 Hari', kategori: 'Transportasi', poin_biaya: 100, potongan: '100%', deskripsi: 'Voucher bebas ongkos keliling Medan menggunakan layanan Trans Medan.', berlaku_hingga: '31 Des 2026' },
+    { kode: 'MEDAN-KULINER-15', nama: 'Voucher Kuliner Kesawan Rp 15.000', kategori: 'Kuliner', poin_biaya: 200, potongan: 'Rp 15.000', deskripsi: 'Voucher makan hemat di pujasera & kedai mitra Kesawan City Walk.', berlaku_hingga: '31 Des 2026' },
+  ]);
 };
 
 const seedIfEmpty = async () => {
@@ -87,7 +94,7 @@ exports.seedIfEmpty = seedIfEmpty;
 exports.overview = async (req, res) => {
   try {
     await seedIfEmpty();
-    const [hospitals, cctv, alerts, health, education, jobs, umkm] = await Promise.all([
+    const [hospitals, cctv, alerts, health, education, jobs, umkm, vouchers] = await Promise.all([
       HospitalCapacity.findAll({ order: [['bed_tersedia', 'DESC']] }),
       CctvPoint.findAll({ order: [['zona', 'ASC'], ['nama', 'ASC']] }),
       EmergencyAlert.findAll({ order: [['aktif', 'DESC'], ['createdAt', 'DESC']] }),
@@ -95,6 +102,7 @@ exports.overview = async (req, res) => {
       EducationInstitution.findAll({ order: [['jenis', 'ASC'], ['nama', 'ASC']] }),
       LocalJob.findAll({ where: { status: 'Approved' }, order: [['createdAt', 'DESC']] }),
       UmkmBusiness.findAll({ order: [['kategori', 'ASC'], ['nama', 'ASC']] }),
+      CityVoucher.findAll({ order: [['poin_biaya', 'ASC']] }),
     ]);
     ok(res, {
       hospitals: uniqueBy(hospitals, item => item.nama),
@@ -104,6 +112,7 @@ exports.overview = async (req, res) => {
       education: uniqueBy(education, item => item.nama),
       jobs,
       umkm: uniqueBy(umkm, item => item.nama),
+      vouchers,
     });
   } catch (err) { fail(res, err); }
 };
