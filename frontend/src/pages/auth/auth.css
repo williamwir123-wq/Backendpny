@@ -270,7 +270,9 @@
   margin-top: 16px;
 }
 
-.profile-settings-nav span {
+.profile-settings-nav span,
+.profile-nav-tab {
+  width: 100%;
   min-height: 44px;
   display: flex;
   align-items: center;
@@ -281,11 +283,15 @@
   padding: 10px 14px;
   font-size: 14px;
   font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.profile-settings-nav span.active {
+.profile-settings-nav span.active,
+.profile-nav-tab.active {
   color: #ffffff;
   background: #043CB1;
+  border-color: #043CB1;
   box-shadow: 0 14px 24px rgba(4, 60, 177, 0.2);
 }
 
