@@ -200,4 +200,55 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { register, login, guestLogin, getForgotQuestion, resetPassword, logout };
+// ===== GOOGLE LOGIN =====
+const googleLogin = async (req, res) => {
+  try {
+    const googleEmail = req.body.email || 'warga.google@medan.go.id';
+    const googleName = req.body.nama || 'Warga Google Demo';
+
+    let user = await User.findOne({ where: { email: googleEmail } });
+    if (!user) {
+      const dummyPassword = await bcrypt.hash('google_oauth_secret', 10);
+      user = await User.create({
+        nama: googleName,
+        email: googleEmail,
+        password: dummyPassword,
+        kota: 'Medan',
+        role: 'warga',
+        security_question: 'Google OAuth',
+        security_answer: dummyPassword,
+      });
+      saveUserToJson(user);
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role, nama: user.nama },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '7d' }
+    );
+
+    await Log.create({
+      userId: user.id,
+      nama: user.nama,
+      aksi: 'GOOGLE_LOGIN',
+      detail: `Login via Google OAuth berhasil: ${user.email}`
+    });
+
+    res.json({
+      message: 'Login via Google berhasil.',
+      token,
+      user: {
+        id: user.id,
+        nama: user.nama,
+        email: user.email,
+        role: user.role,
+        kota: user.kota,
+        foto_profil: user.foto_profil,
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Gagal login Google.', error: error.message });
+  }
+};
+
+module.exports = { register, login, guestLogin, googleLogin, getForgotQuestion, resetPassword, logout };
