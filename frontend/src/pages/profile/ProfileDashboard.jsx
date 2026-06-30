@@ -60,7 +60,7 @@ export default function ProfileDashboard() {
   const [profil, setProfil] = useState(null);
   const [statistik, setStatistik] = useState({ totalVote: 0, totalLaporan: 0, totalLogin: 0 });
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({ nama: '', kota: '' });
+  const [form, setForm] = useState({ nama: '', kota: '', telepon: '' });
   const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [fotoFile, setFotoFile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -92,12 +92,12 @@ export default function ProfileDashboard() {
     try {
       const res = await api.get('/users/profil');
       setProfil(res.data);
-      setForm({ nama: res.data.nama, kota: res.data.kota });
+      setForm({ nama: res.data.nama || '', kota: res.data.kota || 'Medan', telepon: res.data.telepon || '' });
     } catch (err) {
       console.error(err);
       if (user) {
         setProfil(user);
-        setForm({ nama: user.nama || '', kota: user.kota || 'Medan' });
+        setForm({ nama: user.nama || '', kota: user.kota || 'Medan', telepon: user.telepon || '' });
       }
     } finally {
       setLoading(false);
@@ -120,6 +120,7 @@ export default function ProfileDashboard() {
       const formData = new FormData();
       formData.append('nama', form.nama);
       formData.append('kota', form.kota);
+      formData.append('telepon', form.telepon);
       if (fotoFile) formData.append('foto_profil', fotoFile);
 
       const res = await fetch('/api/users/profil', {
@@ -133,7 +134,7 @@ export default function ProfileDashboard() {
       setProfil({ ...profil, ...data.user });
       login(data.user, token);
       setEditMode(false);
-      setMsg({ type: 'success', text: 'Profil berhasil diperbarui!' });
+      setMsg({ type: 'success', text: 'Profil & Data Warga berhasil diperbarui!' });
       setTimeout(() => setMsg({ type: '', text: '' }), 3000);
     } catch (err) {
       setMsg({ type: 'error', text: err.message || 'Gagal update profil.' });
@@ -171,13 +172,14 @@ export default function ProfileDashboard() {
   return (
     <Layout title="Akun Saya" subtitle="Kelola data profil, keamanan akun, dan riwayat aktivitas warga">
       <div className="profile-page">
-        <div className="profile-shell">
-        <aside className="profile-side">
-          <button className="profile-back" onClick={() => navigate('/dashboard')}>
+        <div style={{ width: 'min(1180px, 100%)', margin: '0 auto 24px' }}>
+          <button className="profile-back" onClick={() => navigate('/dashboard')} style={{ marginBottom: 0 }}>
             <HeroIcon name="arrowLeft" />
             Kembali
           </button>
-
+        </div>
+        <div className="profile-shell">
+        <aside className="profile-side">
           <div className="profile-side-card">
             <ProfileAvatar
               src={account?.foto_profil}
@@ -234,74 +236,95 @@ export default function ProfileDashboard() {
           )}
 
           {activeTab === 'account' && (
-            <section className="profile-settings-card">
-              <div className="profile-card-head">
-                <div>
-                  <h3>Personal Information</h3>
-                  <p>Data ini digunakan untuk identitas layanan warga.</p>
-                </div>
-              </div>
-
-              <div className="profile-form-layout">
-                <div className="profile-photo-panel">
-                  <ProfileAvatar
-                    src={previewPhoto}
-                    initials={previewInitials}
-                    imageClassName="profile-photo-preview"
-                    fallbackClassName="profile-photo-preview placeholder"
-                  />
-                  <strong>Profile Photo</strong>
-                  <span>PNG atau JPG untuk foto profil akun.</span>
-                </div>
-
-                {editMode && !isGuest ? (
-                  <form className="profile-settings-form" onSubmit={handleSave}>
-                    <div className="form-group">
-                      <label>Nama Lengkap</label>
-                      <input value={form.nama}
-                        onChange={e => setForm({ ...form, nama: e.target.value })} required />
-                    </div>
-                    <div className="form-group">
-                      <label>Kota</label>
-                      <input value={form.kota}
-                        onChange={e => setForm({ ...form, kota: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                      <label>Foto Profil</label>
-                      <input type="file" accept="image/*"
-                        onChange={e => setFotoFile(e.target.files[0])} />
-                    </div>
-                    <div className="profile-actions">
-                      <button type="button" className="btn btn-outline" onClick={() => setEditMode(false)}>
-                        Cancel
-                      </button>
-                      <button type="submit" className="btn btn-primary" disabled={saving}>
-                        {saving ? 'Saving...' : 'Save Changes'}
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="profile-details-grid">
-                    <div className="profile-detail-item">
-                      <small>Nama Lengkap</small>
-                      <strong>{account?.nama || '-'}</strong>
-                    </div>
-                    <div className="profile-detail-item">
-                      <small>Email</small>
-                      <strong>{account?.email || '-'}</strong>
-                    </div>
-                    <div className="profile-detail-item">
-                      <small>Kota</small>
-                      <strong>{account?.kota || 'Medan'}</strong>
-                    </div>
-                    <div className="profile-detail-item">
-                      <small>Role Status</small>
-                      <strong>{isGuest ? 'Guest Demo' : account?.role === 'admin' ? 'Administrator' : 'Warga Terverifikasi'}</strong>
-                    </div>
+            <>
+              {searchParams.get('edit') === '1' && !isGuest && (
+                <div style={{ background: '#eef4ff', border: '1px solid #043cb1', padding: '16px 20px', borderRadius: 16, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <span style={{ fontSize: 24 }}>👋</span>
+                  <div>
+                    <strong style={{ display: 'block', color: '#043cb1', fontSize: 15 }}>Selamat Datang! Kelengkapi Data Warga Anda</strong>
+                    <span style={{ color: '#5f687c', fontSize: 13 }}>Silakan periksa Nama Lengkap dan isikan Nomor Telepon / WhatsApp Anda di bawah ini.</span>
                   </div>
-                )}
-              </div>
-            </section>
+                </div>
+              )}
+
+              <section className="profile-settings-card">
+                <div className="profile-card-head">
+                  <div>
+                    <h3>Personal Information</h3>
+                    <p>Data ini digunakan untuk identitas dan layanan warga kota Medan.</p>
+                  </div>
+                </div>
+
+                <div className="profile-form-layout">
+                  <div className="profile-photo-panel">
+                    <ProfileAvatar
+                      src={previewPhoto}
+                      initials={previewInitials}
+                      imageClassName="profile-photo-preview"
+                      fallbackClassName="profile-photo-preview placeholder"
+                    />
+                    <strong>Profile Photo</strong>
+                    <span>PNG atau JPG untuk foto profil akun.</span>
+                  </div>
+
+                  {editMode && !isGuest ? (
+                    <form className="profile-settings-form" onSubmit={handleSave}>
+                      <div className="form-group">
+                        <label>Nama Lengkap</label>
+                        <input value={form.nama}
+                          onChange={e => setForm({ ...form, nama: e.target.value })} placeholder="Nama lengkap sesuai KTP" required />
+                      </div>
+                      <div className="form-group">
+                        <label>Nomor Telepon / WhatsApp</label>
+                        <input value={form.telepon}
+                          onChange={e => setForm({ ...form, telepon: e.target.value })} placeholder="08xxxxxxxxxx" required />
+                      </div>
+                      <div className="form-group">
+                        <label>Kota / Kabupaten</label>
+                        <input value={form.kota}
+                          onChange={e => setForm({ ...form, kota: e.target.value })} />
+                      </div>
+                      <div className="form-group">
+                        <label>Foto Profil</label>
+                        <input type="file" accept="image/*"
+                          onChange={e => setFotoFile(e.target.files[0])} />
+                      </div>
+                      <div className="profile-actions">
+                        <button type="button" className="btn btn-outline" onClick={() => setEditMode(false)}>
+                          Batal
+                        </button>
+                        <button type="submit" className="btn btn-primary" disabled={saving}>
+                          {saving ? 'Simpan...' : 'Simpan Profil Warga'}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <div className="profile-details-grid">
+                      <div className="profile-detail-item">
+                        <small>Nama Lengkap</small>
+                        <strong>{account?.nama || '-'}</strong>
+                      </div>
+                      <div className="profile-detail-item">
+                        <small>Email</small>
+                        <strong>{account?.email || '-'}</strong>
+                      </div>
+                      <div className="profile-detail-item">
+                        <small>Nomor Telepon / WhatsApp</small>
+                        <strong>{account?.telepon || 'Belum diisi'}</strong>
+                      </div>
+                      <div className="profile-detail-item">
+                        <small>Kota</small>
+                        <strong>{account?.kota || 'Medan'}</strong>
+                      </div>
+                      <div className="profile-detail-item">
+                        <small>Role Status</small>
+                        <strong>{isGuest ? 'Guest Demo' : account?.role === 'admin' ? 'Administrator' : 'Warga Terverifikasi'}</strong>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+            </>
           )}
 
           {activeTab === 'security' && (
