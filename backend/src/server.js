@@ -19,6 +19,28 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+let isConnected = false;
+const initDb = async () => {
+  if (!isConnected) {
+    await connectMySQL();
+    await seedDefaultAdmin();
+    await seedUsersFromJson();
+    await connectMongoDB();
+    isConnected = true;
+  }
+};
+
+// Middleware to ensure DB connections in serverless environments
+app.use(async (req, res, next) => {
+  try {
+    await initDb();
+    next();
+  } catch (error) {
+    console.error("Database connection error in middleware:", error);
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
+
 // Static folder untuk file upload
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
@@ -43,15 +65,15 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const startServer = async () => {
-  await connectMySQL();
-  await seedDefaultAdmin();
-  await seedUsersFromJson();
-  await connectMongoDB();
-  app.listen(PORT, () => {
-    console.log(`Server berjalan di http://localhost:${PORT}`);
-    console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  initDb().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server berjalan di http://localhost:${PORT}`);
+      console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);
+    });
+  }).catch(err => {
+    console.error("Gagal memulai server:", err);
   });
-};
+}
 
-startServer();
+module.exports = app;

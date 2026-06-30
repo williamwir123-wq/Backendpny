@@ -1,6 +1,13 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
+const dialectOptions = {};
+if (process.env.DB_SSL === 'true') {
+  dialectOptions.ssl = {
+    rejectUnauthorized: false
+  };
+}
+
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -10,6 +17,7 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT || 3306,
     dialect: "mysql",
     logging: false,
+    dialectOptions,
     pool: {
       max: 10,
       min: 0,
@@ -23,8 +31,14 @@ const connectMySQL = async () => {
   try {
     await sequelize.authenticate();
     console.log("MySQL terhubung");
-    await sequelize.sync({ alter: true });
-    console.log("Tabel MySQL tersinkronisasi");
+    try {
+      await sequelize.sync({ alter: true });
+      console.log("Tabel MySQL tersinkronisasi (alter: true)");
+    } catch (alterError) {
+      console.warn("Sinkronisasi dengan 'alter: true' gagal (kemungkinan karena batasan DDL database, seperti TiDB), mencoba sinkronisasi standar:", alterError.message);
+      await sequelize.sync();
+      console.log("Tabel MySQL tersinkronisasi");
+    }
   } catch (error) {
     console.error("Gagal koneksi MySQL:", error.message);
     process.exit(1);
