@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+require('mysql2');
 require('dotenv').config();
 
 const { connectMySQL } = require('./config/mysql');
