@@ -2,8 +2,9 @@ const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
 const dialectOptions = {};
-if (process.env.DB_SSL === 'true') {
+if (process.env.DB_SSL === 'true' || (process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud.com'))) {
   dialectOptions.ssl = {
+    minVersion: 'TLSv1.2',
     rejectUnauthorized: false
   };
 }
