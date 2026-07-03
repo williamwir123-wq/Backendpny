@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 import HeroIcon from './HeroIcon';
+import { getEcologyAvatar } from '../utils/avatar';
 import './Layout.css';
 
 export default function Layout({ children, title, subtitle }) {
@@ -96,7 +97,7 @@ export default function Layout({ children, title, subtitle }) {
           aria-expanded={profileOpen}
           onClick={() => setProfileOpen(open => !open)}
         >
-          <span className="layout-avatar">{user?.nama?.[0]?.toUpperCase() || 'U'}</span>
+          <img src={user?.foto_profile || getEcologyAvatar(user?.nama)} className="layout-avatar-img" alt="Avatar" />
         </button>
         <div className="layout-profile-dropdown">
           <div className="layout-dropdown-info">

@@ -97,15 +97,19 @@
   transform: scale(1.05);
 }
 
-.layout-avatar {
+.layout-avatar-img {
   width: 42px;
   height: 42px;
-  display: grid;
-  place-items: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, #111e43, #043cb1);
-  color: #ffffff;
-  font-weight: 800;
+  object-fit: cover;
+  border: 2.5px solid #edf0f7;
+  background: #ffffff;
+  padding: 2.5px;
+  transition: border-color 0.2s ease;
+}
+
+.layout-profile:hover .layout-avatar-img {
+  border-color: #e3b473;
 }
 
 .layout-profile-dropdown {

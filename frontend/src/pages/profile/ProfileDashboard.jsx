@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import { useAuth } from '../../context/AuthContext';
 import HeroIcon from '../../components/HeroIcon';
+import { getEcologyAvatar } from '../../utils/avatar';
 import api from '../../utils/api';
 import '../auth/auth.css';
 
@@ -25,7 +26,7 @@ const hasUsablePhoto = (src) => {
   return Boolean(value && value !== 'null' && value !== 'undefined');
 };
 
-function ProfileAvatar({ src, initials, imageClassName, fallbackClassName }) {
+function ProfileAvatar({ src, initials, userName, imageClassName, fallbackClassName }) {
   const [imageError, setImageError] = useState(false);
   const showImage = hasUsablePhoto(src) && !imageError;
 
@@ -45,9 +46,12 @@ function ProfileAvatar({ src, initials, imageClassName, fallbackClassName }) {
   }
 
   return (
-    <div className={fallbackClassName}>
-      {initials || 'U'}
-    </div>
+    <img
+      src={getEcologyAvatar(userName || initials)}
+      alt="foto profil default"
+      className={imageClassName}
+      style={{ background: '#ffffff', padding: '4px', border: '1px solid #edf0f7', objectFit: 'contain' }}
+    />
   );
 }
 
@@ -183,6 +187,7 @@ export default function ProfileDashboard() {
           <div className="profile-side-card">
             <ProfileAvatar
               src={account?.foto_profil}
+              userName={account?.nama}
               initials={getInitials(account?.nama)}
               imageClassName="profile-avatar"
               fallbackClassName="profile-avatar-placeholder"
@@ -259,6 +264,7 @@ export default function ProfileDashboard() {
                   <div className="profile-photo-panel">
                     <ProfileAvatar
                       src={previewPhoto}
+                      userName={form.nama}
                       initials={previewInitials}
                       imageClassName="profile-photo-preview"
                       fallbackClassName="profile-photo-preview placeholder"
