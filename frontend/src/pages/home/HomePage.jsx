@@ -286,6 +286,7 @@ export default function HomePage() {
                 <li>Gillbert Allison Wijaya</li>
                 <li>Dicky Sasqia</li>
                 <li>Deidrich Zhu</li>
+                <li>Wilhan</li>
               </ul>
             </div>
           </div>
