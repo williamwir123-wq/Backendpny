@@ -30,9 +30,15 @@ export default function ForgotPassword() {
     }
   };
 
+  const hasMinLength = newPassword.length >= 6;
+  const hasUppercase = /[A-Z]/.test(newPassword);
+  const hasDot = /\./.test(newPassword);
+
   const handleStep2 = async (e) => {
     e.preventDefault();
-    if (newPassword.length < 6) return setError('Password minimal 6 karakter.');
+    if (!hasMinLength || !hasUppercase || !hasDot) {
+      return setError('Password harus memenuhi semua syarat: minimal 6 karakter, memiliki huruf besar, dan memiliki tanda titik (.).');
+    }
     setLoading(true); setError('');
     try {
       await api.post('/auth/forgot-password/reset', {
@@ -97,6 +103,22 @@ export default function ForgotPassword() {
               <label>Password Baru</label>
               <input type="password" placeholder="Minimal 6 karakter"
                 value={newPassword} onChange={e => { setNewPassword(e.target.value); setError(''); }} required />
+              {newPassword && (
+                <div className="password-requirements">
+                  <div className={`requirement-item ${hasMinLength ? 'valid' : ''}`}>
+                    <HeroIcon name={hasMinLength ? 'check' : 'xCircle'} className="req-icon" />
+                    <span>Minimal 6 karakter</span>
+                  </div>
+                  <div className={`requirement-item ${hasUppercase ? 'valid' : ''}`}>
+                    <HeroIcon name={hasUppercase ? 'check' : 'xCircle'} className="req-icon" />
+                    <span>Setidaknya 1 huruf besar</span>
+                  </div>
+                  <div className={`requirement-item ${hasDot ? 'valid' : ''}`}>
+                    <HeroIcon name={hasDot ? 'check' : 'xCircle'} className="req-icon" />
+                    <span>Setidaknya 1 tanda titik (.)</span>
+                  </div>
+                </div>
+              )}
             </div>
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Menyimpan...' : 'Reset Password'}

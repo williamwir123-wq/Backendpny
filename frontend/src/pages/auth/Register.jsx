@@ -69,10 +69,15 @@ export default function Register() {
     setError('');
   };
 
+  const password = form.password;
+  const hasMinLength = password.length >= 6;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasDot = /\./.test(password);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password.length < 6) {
-      return setError('Password minimal 6 karakter.');
+    if (!hasMinLength || !hasUppercase || !hasDot) {
+      return setError('Password harus memenuhi semua syarat: minimal 6 karakter, memiliki huruf besar, dan memiliki tanda titik (.).');
     }
     setLoading(true);
     try {
@@ -130,6 +135,22 @@ export default function Register() {
                 <HeroIcon name={showPass ? 'eyeSlash' : 'eye'} />
               </button>
             </div>
+            {form.password && (
+              <div className="password-requirements">
+                <div className={`requirement-item ${hasMinLength ? 'valid' : ''}`}>
+                  <HeroIcon name={hasMinLength ? 'check' : 'xCircle'} className="req-icon" />
+                  <span>Minimal 6 karakter</span>
+                </div>
+                <div className={`requirement-item ${hasUppercase ? 'valid' : ''}`}>
+                  <HeroIcon name={hasUppercase ? 'check' : 'xCircle'} className="req-icon" />
+                  <span>Setidaknya 1 huruf besar</span>
+                </div>
+                <div className={`requirement-item ${hasDot ? 'valid' : ''}`}>
+                  <HeroIcon name={hasDot ? 'check' : 'xCircle'} className="req-icon" />
+                  <span>Setidaknya 1 tanda titik (.)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form-group">

@@ -465,3 +465,42 @@
     flex-direction: column;
   }
 }
+
+/* Password Requirements Checklist */
+.password-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #f8faff;
+  border: 1px solid #e4e8f1;
+  border-radius: var(--radius);
+}
+
+.requirement-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #7b8190;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.requirement-item .req-icon {
+  width: 14px;
+  height: 14px;
+  color: #ef4444; /* red when invalid */
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.requirement-item.valid {
+  color: #043cb1; /* corporate blue color when valid */
+  font-weight: 700;
+}
+
+.requirement-item.valid .req-icon {
+  color: #043cb1; /* corporate blue color checkmark when valid */
+}
