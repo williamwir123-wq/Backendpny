@@ -48,12 +48,12 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-const NEWS_DATA = [
+const ALL_NEWS_POOL = [
   {
     id: 1,
     judul: "Revitalisasi Lapangan Merdeka Medan Ditargetkan Selesai Akhir Tahun Ini",
     sumber: "Tribunnews Medan",
-    tanggal: "Hari ini • 09:30",
+    tanggal: "Baru saja • 10:15",
     gambar: "https://images.unsplash.com/photo-1579621970795-87faff3f68b8?w=500&auto=format&fit=crop&q=60",
     url: "https://medan.tribunnews.com/2026/01/01/revitalisasi-lapangan-merdeka-medan-ditargetkan-selesai-akhir-tahun-ini"
   },
@@ -61,7 +61,7 @@ const NEWS_DATA = [
     id: 2,
     judul: "Pemko Medan Uji Coba Koridor Baru Bus Listrik Trans Metro Deli",
     sumber: "Tribunnews Medan",
-    tanggal: "Kemarin • 14:15",
+    tanggal: "2 menit lalu • 10:13",
     gambar: "https://images.unsplash.com/photo-1570129476815-ba368ac77013?w=500&auto=format&fit=crop&q=60",
     url: "https://medan.tribunnews.com/2026/01/01/pemko-medan-uji-coba-koridor-baru-bus-listrik-trans-metro-deli"
   },
@@ -69,9 +69,49 @@ const NEWS_DATA = [
     id: 3,
     judul: "Indeks Kualitas Udara Medan Masuk Kategori Baik Pagi Ini",
     sumber: "Tribunnews Medan",
-    tanggal: "Kemarin • 08:00",
+    tanggal: "5 menit lalu • 10:10",
     gambar: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&auto=format&fit=crop&q=60",
     url: "https://medan.tribunnews.com/2026/01/01/indeks-kualitas-udara-medan-masuk-kategori-baik-pagi-ini"
+  },
+  {
+    id: 4,
+    judul: "Dinas Pendidikan Kota Medan Luncurkan Program Beasiswa Siswa Berprestasi",
+    sumber: "Tribunnews Medan",
+    tanggal: "12 menit lalu • 10:03",
+    gambar: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500&auto=format&fit=crop&q=60",
+    url: "https://medan.tribunnews.com/2026/01/01/dinas-pendidikan-kota-medan-luncurkan-program-beasiswa-siswa-berprestasi"
+  },
+  {
+    id: 5,
+    judul: "Pembangunan Underpass Jl. HM Yamin Medan Mulai Tahap Akhir Pengecoran",
+    sumber: "Tribunnews Medan",
+    tanggal: "20 menit lalu • 09:55",
+    gambar: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&auto=format&fit=crop&q=60",
+    url: "https://medan.tribunnews.com/2026/01/01/pembangunan-underpass-jl-hm-yamin-medan-mulai-tahap-akhir-pengecoran"
+  },
+  {
+    id: 6,
+    judul: "Pasar Petisah Medan Siap Terapkan Pembayaran Digital QRIS Secara Serentak",
+    sumber: "Tribunnews Medan",
+    tanggal: "35 menit lalu • 09:40",
+    gambar: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&auto=format&fit=crop&q=60",
+    url: "https://medan.tribunnews.com/2026/01/01/pasar-petisah-medan-siap-terapkan-pembayaran-digital-qris-secara-serentak"
+  },
+  {
+    id: 7,
+    judul: "BMKG Keluarkan Peringatan Dini Cuaca Hujan Ringan di Kawasan Medan Selayang",
+    sumber: "Tribunnews Medan",
+    tanggal: "45 menit lalu • 09:30",
+    gambar: "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=500&auto=format&fit=crop&q=60",
+    url: "https://medan.tribunnews.com/2026/01/01/bmkg-keluarkan-peringatan-dini-cuaca-hujan-ringan-di-kawasan-medan-selayang"
+  },
+  {
+    id: 8,
+    judul: "Taman Cadika Johor Jadi Lokasi Utama Lomba Catur Komunitas Akhir Pekan Ini",
+    sumber: "Tribunnews Medan",
+    tanggal: "1 jam lalu • 09:15",
+    gambar: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=500&auto=format&fit=crop&q=60",
+    url: "https://medan.tribunnews.com/2026/01/01/taman-cadika-johor-jadi-lokasi-utama-lomba-catur-komunitas-akhir-pekan-ini"
   }
 ];
 
@@ -82,6 +122,23 @@ export default function DashboardKota() {
   const [overview, setOverview] = useState(null);
   const [publicServices, setPublicServices] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Auto rotation states
+  const [visibleIndex, setVisibleIndex] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    if (loading) return undefined;
+    const interval = setInterval(() => {
+      setFade(false); // start fade out
+      setTimeout(() => {
+        setVisibleIndex((prev) => (prev + 1) % ALL_NEWS_POOL.length);
+        setFade(true); // start fade in
+      }, 400);
+    }, 6000); // rotate every 6 seconds
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   useEffect(() => {
     const load = async () => {
@@ -135,6 +192,13 @@ export default function DashboardKota() {
   const hospitalBeds = publicServices?.hospitals ? publicServices.hospitals.slice(0, 2) : [];
   const activeAlert = publicServices?.alerts ? publicServices.alerts.find(a => a.aktif) : null;
 
+  // Select 3 news items to display dynamically
+  const currentNews = [
+    ALL_NEWS_POOL[visibleIndex],
+    ALL_NEWS_POOL[(visibleIndex + 1) % ALL_NEWS_POOL.length],
+    ALL_NEWS_POOL[(visibleIndex + 2) % ALL_NEWS_POOL.length]
+  ];
+
   return (
     <Layout title="Dashboard Kota" subtitle="Statistik & Monitoring Smart City Medan">
       {/* Berita Medan Terkini (Microsoft Edge news card feed style) */}
@@ -144,10 +208,13 @@ export default function DashboardKota() {
             <HeroIcon name="newspaper" style={{ width: 20, height: 20, color: '#043cb1' }} />
             Berita Medan Terkini
           </h3>
-          <span>Sumber: Tribunnews</span>
+          <div className="news-live-indicator">
+            <span className="live-dot"></span>
+            <span>LIVE UPDATES</span>
+          </div>
         </div>
-        <div className="dashboard-news-grid">
-          {NEWS_DATA.map((item) => (
+        <div className={`dashboard-news-grid ${fade ? 'fade-in' : 'fade-out'}`}>
+          {currentNews.map((item) => (
             <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer" className="news-card-item">
               <div className="news-card-img-wrap">
                 <img src={item.gambar} alt={item.judul} />
