@@ -222,6 +222,44 @@
   height: 104px;
   border-radius: 50%;
   object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+.profile-details-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.profile-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  border-bottom: 1px solid #edf0f7;
+  padding-bottom: 12px;
+}
+
+.profile-detail-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.profile-detail-item small {
+  color: #7b8190;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-detail-item strong {
+  color: #202224;
+  font-size: 15px;
+  font-weight: 700;
+  word-break: break-all;
 }
 
 .profile-avatar,

@@ -50,7 +50,7 @@ function ProfileAvatar({ src, initials, userName, imageClassName, fallbackClassN
       src={getEcologyAvatar(userName || initials)}
       alt="foto profil default"
       className={imageClassName}
-      style={{ background: '#ffffff', padding: '4px', border: '1px solid #edf0f7', objectFit: 'contain' }}
+      style={{ background: '#ffffff', padding: '4px', border: '2px solid #f7e4bf', objectFit: 'contain', display: 'block', margin: '0 auto' }}
     />
   );
 }
